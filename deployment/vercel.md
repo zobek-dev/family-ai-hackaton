@@ -30,10 +30,8 @@ Tras levantar el stack, ejecuta **`npm run seed`** (o el equivalente en tu entor
 ## 2. Proyecto en Vercel
 
 1. Conecta el repositorio en [Vercel](https://vercel.com).
-2. **Root Directory:** déjalo vacío o en la raíz del repo; el archivo **[`vercel.json`](../vercel.json)** en la raíz define `"rootDirectory": "apps/frontend"` para que el build sea Next.js en esa carpeta.
-3. **Install command:** en `vercel.json` → `cd ../.. && SKIP_INSTALL_AGENT=1 npm install` instala el monorepo sin `uv`. Se usa `npm install` (no `npm ci`) porque `package-lock.json` suele estar en `.gitignore` y Vercel no sube archivos ignorados por Git.
-4. **Build command:** `next build` (por defecto del preset en `apps/frontend`).
-5. **Output:** manejado por el preset Next.js.
+2. **Raíz del repositorio:** en el dashboard, el **Root Directory** del proyecto debe ser la raíz del repo (no `apps/frontend`). La config de build está en [`vercel.json`](../vercel.json) en esa raíz (`installCommand` + `buildCommand` para workspaces).
+3. **Install / build:** `vercel.json` define `SKIP_INSTALL_AGENT=1 npm install` y `npm run build --workspace frontend`. Se usa `npm install` porque `package-lock.json` está en `.gitignore` y Vercel no sube archivos ignorados por Git.
 
 **CLI:** ejecuta `npx vercel deploy --prod` desde la **raíz del repositorio** (no desde `apps/frontend`), para que se suba todo el monorepo.
 

@@ -61,7 +61,7 @@ Comandos adicionales del monorepo: `npm run dev:full` (incluye servidor MCP opci
 
 ## Frontend en Vercel
 
-El Next de `apps/frontend` se puede hospedar en Vercel; el **BFF** y el **stack agente + Intelligence** tienen que vivir fuera de Vercel (Docker/Railway/…). Configuración en la raíz: [`vercel.json`](vercel.json) (`rootDirectory: apps/frontend`). Despliegue por CLI: **`npx vercel deploy --prod`** desde la raíz del repo. Detalle y variables (`BFF_URL`, etc.) en **[deployment/vercel.md](deployment/vercel.md)**.
+El Next de `apps/frontend` se puede hospedar en Vercel; el **BFF** y el **stack agente + Intelligence** tienen que vivir fuera de Vercel (Docker/Railway/…). Config en la raíz del repo: [`vercel.json`](vercel.json). **`npx vercel deploy --prod`** debe ejecutarse desde la raíz del repo. Detalle en **[deployment/vercel.md](deployment/vercel.md)**.
 
 ---
 
