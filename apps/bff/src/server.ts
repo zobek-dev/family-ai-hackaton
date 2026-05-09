@@ -13,17 +13,35 @@ const intelligence = new CopilotKitIntelligence({
   wsUrl: process.env.INTELLIGENCE_GATEWAY_WS_URL ?? "ws://localhost:4403",
 });
 
+const defaultLangGraphAssistantConfig = {
+  recursion_limit: Number(process.env.LANGGRAPH_RECURSION_LIMIT ?? 60),
+};
+
 const agent = new LangGraphAgent({
   deploymentUrl:
-    process.env.LANGGRAPH_DEPLOYMENT_URL ?? "http://localhost:8123",
+    process.env.LANGGRAPH_DEPLOYMENT_URL ?? "http://localhost:8133",
   graphId: "default",
   langsmithApiKey: process.env.LANGSMITH_API_KEY ?? "",
   // 60 (vs LangGraph default 25) leaves headroom for the deepagents planner
   // loop on multi-step turns like "draft email + queue".
-  assistantConfig: {
-    recursion_limit: Number(process.env.LANGGRAPH_RECURSION_LIMIT ?? 60),
-  },
+  assistantConfig: defaultLangGraphAssistantConfig,
 });
+
+const idealensAgent = new LangGraphAgent({
+  deploymentUrl:
+    process.env.LANGGRAPH_DEPLOYMENT_URL ?? "http://localhost:8133",
+  graphId: "idealens",
+  langsmithApiKey: process.env.LANGSMITH_API_KEY ?? "",
+  assistantConfig: defaultLangGraphAssistantConfig,
+});
+
+const mcpAppsEnabled =
+  process.env.ENABLE_MCP_APPS === "true" || process.env.ENABLE_MCP_APPS === "1";
+
+/** Intelligence runs a tiny LLM pass to name new threads; IdeaLens-style prompts often fail JSON shaping → noisy retries → "Untitled". */
+const generateThreadNames =
+  process.env.COPILOTKIT_GENERATE_THREAD_NAMES !== "false" &&
+  process.env.COPILOTKIT_GENERATE_THREAD_NAMES !== "0";
 
 const app = createCopilotEndpoint({
   basePath: "/api/copilotkit",
@@ -31,20 +49,42 @@ const app = createCopilotEndpoint({
     intelligence,
     identifyUser: () => ({ id: "default", name: "Hackathon User" }),
     licenseToken: process.env.COPILOTKIT_LICENSE_TOKEN,
-    agents: { default: agent },
+    agents: { default: agent, idealens: idealensAgent },
     openGenerativeUI: true,
     a2ui: { injectA2UITool: false },
-    mcpApps: {
-      servers: [
-        {
-          type: "http",
-          url: process.env.MCP_SERVER_URL || "http://localhost:3001/mcp",
-          serverId: "manufact_local",
-        },
-      ],
-    },
+    generateThreadNames,
+    ...(mcpAppsEnabled
+      ? {
+          mcpApps: {
+            servers: [
+              {
+                type: "http" as const,
+                url:
+                  process.env.MCP_SERVER_URL || "http://localhost:3001/mcp",
+                serverId: "manufact_local",
+              },
+            ],
+          },
+        }
+      : {}),
   }),
 });
+
+if (mcpAppsEnabled) {
+  console.log(
+    `[bff] MCP apps ON → ${process.env.MCP_SERVER_URL ?? "http://localhost:3001/mcp"}`,
+  );
+} else {
+  console.log(
+    "[bff] MCP apps OFF — set ENABLE_MCP_APPS=true when using npm run dev:mcp / dev:full",
+  );
+}
+
+if (!generateThreadNames) {
+  console.log(
+    "[bff] COPILOTKIT_GENERATE_THREAD_NAMES disabled — new threads stay unnamed until renamed",
+  );
+}
 
 // Rewrite known 5xx error bodies into structured `{ error, hint, command }`
 // payloads the UI can render as actionable toasts. Conservative matching —
@@ -104,6 +144,16 @@ app.use("*", async (c, next) => {
 
 const port = Number(process.env.PORT) || 4000;
 
-serve({ fetch: app.fetch, port }, () => {
-  console.log(`BFF ready at http://localhost:${port}`);
+const hostname =
+  typeof process.env.HOST === "string" && process.env.HOST.trim() !== ""
+    ? process.env.HOST.trim()
+    : undefined;
+
+const listenOpts =
+  hostname !== undefined
+    ? { fetch: app.fetch, port, hostname }
+    : { fetch: app.fetch, port };
+
+serve(listenOpts, () => {
+  console.log(`BFF ready at http://${hostname ?? "localhost"}:${port}`);
 });

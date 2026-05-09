@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="il-lens" viewBox="0 0 24 24">
+    <circle cx="10.5" cy="10.5" r="6.5"/>
+    <path d="m15.5 15.5 4.5 4.5"/>
+    <circle cx="10.5" cy="10.5" r="2.5"/>
+  </symbol>
+  <symbol id="il-spark" viewBox="0 0 24 24">
+    <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/>
+    <path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15z"/>
+  </symbol>
+  <symbol id="il-target" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8"/>
+    <circle cx="12" cy="12" r="4"/>
+    <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+  </symbol>
+  <symbol id="il-personas" viewBox="0 0 24 24">
+    <circle cx="9" cy="8" r="3"/>
+    <path d="M3.5 19c.6-3 2.5-5 5.5-5s4.9 2 5.5 5"/>
+    <circle cx="17" cy="9" r="2.5"/>
+    <path d="M15.5 14.2c2.8.2 4.4 2 5 4.8"/>
+  </symbol>
+  <symbol id="il-map" viewBox="0 0 24 24">
+    <path d="M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2V6z"/>
+    <path d="M9 4v14M15 6v14"/>
+  </symbol>
+  <symbol id="il-experiment" viewBox="0 0 24 24">
+    <path d="M9 3h6"/>
+    <path d="M10 3v6l-4.5 8A3 3 0 0 0 8.1 21h7.8a3 3 0 0 0 2.6-4L14 9V3"/>
+    <path d="M8 16h8"/>
+  </symbol>
+  <symbol id="il-score" viewBox="0 0 24 24">
+    <path d="M4 14a8 8 0 1 1 16 0"/>
+    <path d="M12 14l4-5"/>
+    <path d="M6 20h12"/>
+  </symbol>
+  <symbol id="il-tool" viewBox="0 0 24 24">
+    <path d="M14.5 5.5a4.5 4.5 0 0 0 4 6.9L11 20l-4-4 7.5-7.6a4.5 4.5 0 0 0 0-2.9z"/>
+  </symbol>
+  <symbol id="il-activity" viewBox="0 0 24 24">
+    <path d="M4 12h4l2-6 4 12 2-6h4"/>
+  </symbol>
+  <symbol id="il-warning" viewBox="0 0 24 24">
+    <path d="M12 3l9 16H3l9-16z"/>
+    <path d="M12 9v4M12 17h.01"/>
+  </symbol>
+  <symbol id="il-check" viewBox="0 0 24 24">
+    <path d="M20 6 9 17l-5-5"/>
+  </symbol>
+  <symbol id="il-close" viewBox="0 0 24 24">
+    <path d="M6 6l12 12M18 6 6 18"/>
+  </symbol>
+  <symbol id="il-plus" viewBox="0 0 24 24">
+    <path d="M12 5v14M5 12h14"/>
+  </symbol>
+  <symbol id="il-refresh" viewBox="0 0 24 24">
+    <path d="M20 12a8 8 0 0 1-13.7 5.7L4 15"/>
+    <path d="M4 20v-5h5"/>
+    <path d="M4 12A8 8 0 0 1 17.7 6.3L20 9"/>
+    <path d="M20 4v5h-5"/>
+  </symbol>
+  <symbol id="il-edit" viewBox="0 0 24 24">
+    <path d="M4 20h4l11-11a2.1 2.1 0 0 0-3-3L5 17l-1 3z"/>
+    <path d="M14 7l3 3"/>
+  </symbol>
+  <symbol id="il-chevron-down" viewBox="0 0 24 24">
+    <path d="m6 9 6 6 6-6"/>
+  </symbol>
+  <symbol id="il-rocket" viewBox="0 0 24 24">
+    <path d="M14 4c2.8 0 4.8.8 6 2-.2 3.4-1.6 6.3-4.2 8.8L11 19.6 4.4 13l4.8-4.8C10.8 6.6 12.4 4 14 4z"/>
+    <path d="M8 16l-3 3M15 9h.01"/>
+  </symbol>
+</svg>

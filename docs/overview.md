@@ -2,9 +2,10 @@
 
 ## ¿Qué es este proyecto?
 
-Starter kit de hackathon construido con CopilotKit v2. Es una aplicación de IA donde un agente puede ver y manipular un "canvas" (tablero visual) en tiempo real mientras el usuario chatea con él.
+Starter kit de hackathon construido con CopilotKit v2. Contiene dos experiencias:
 
-Caso de uso concreto: gestión de leads de un workshop de IA, integrado con Notion.
+- **Leads Workspace** (`/leads`) — gestión de leads de un workshop de IA, integrado con Notion, con chat lateral y agente que manipula un kanban en tiempo real.
+- **IdeaLens** (`/idealens`) — workspace de validación de startups generado por el agente: snapshot, personas, mapa de suposiciones, experimentos y scorecard, todo construido en runtime sin chatbox.
 
 ---
 

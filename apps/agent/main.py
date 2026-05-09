@@ -29,6 +29,8 @@ from src.intelligence_cleanup import wipe_orphan_threads
 from src.lead_store import boot_status as _lead_store_boot_status
 from src.notion_tools import load_notion_tools
 from src.prompts import build_system_prompt
+from src.idealens.middleware import IdeaLensStateMiddleware
+from src.idealens.prompts import IDEA_LENS_SYSTEM_PROMPT
 from src.runtime import build_graph
 
 
@@ -68,7 +70,9 @@ def _format_integration_status() -> str:
 # Stub-key warnings for the active runtime live closer to the runtime selector.
 # The Gemini runtimes still warn here so the message is loud at boot.
 _AGENT_RUNTIME = os.getenv("AGENT_RUNTIME", "gemini-flash-deep")
+_IDEALENS_RUNTIME = os.getenv("IDEALENS_AGENT_RUNTIME", "gemini-flash-react")
 print(f"[runtime] AGENT_RUNTIME={_AGENT_RUNTIME}", flush=True)
+print(f"[runtime] IDEALENS_AGENT_RUNTIME={_IDEALENS_RUNTIME}", flush=True)
 
 _gemini_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or ""
 if _AGENT_RUNTIME.startswith("gemini-") and (
@@ -107,6 +111,34 @@ graph = build_graph(
     tools=backend_tools,
     system_prompt=SYSTEM_PROMPT,
 )
+
+
+idealens_graph = build_graph(
+    "noop" if _use_noop else _IDEALENS_RUNTIME,
+    tools=[],
+    system_prompt=IDEA_LENS_SYSTEM_PROMPT,
+    canvas_middleware=[IdeaLensStateMiddleware()],
+    copilotkit_expose_state=(
+        "idea",
+        "region",
+        "businessModel",
+        "goal",
+        "selectedPersonaId",
+    ),
+)
+
+if _use_noop:
+    print(
+        "[idealens] graph=noop — GEMINI_API_KEY missing or stub; "
+        "no calls to generativelanguage.googleapis.com (AI Studio usage stays at 0).",
+        flush=True,
+    )
+else:
+    print(
+        f"[idealens] graph={_IDEALENS_RUNTIME} — IdeaLens uses IDEALENS_AGENT_RUNTIME "
+        f"(default gemini-flash-react for reliable frontend tools).",
+        flush=True,
+    )
 
 
 def main() -> None:

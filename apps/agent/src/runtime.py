@@ -5,9 +5,8 @@ side-by-side benchmark Gemini-Flash-Lite-deepagents vs. Gemini-Flash-Lite-react
 vs. Claude-Sonnet-4.6-react without a code edit.
 
 Every runtime keeps the same middleware chain — `TimingMiddleware` first
-(outermost) so it sees every inner model/tool call, then `LeadStateMiddleware`
-to contribute the canvas-state TypedDict, and `CopilotKitMiddleware` for
-AG-UI / CopilotKit interop.
+(outermost), canvas middleware (`LeadStateMiddleware` by default, or IdeaLens),
+then `CopilotKitMiddleware` for AG-UI / CopilotKit interop.
 
 Anthropic deps are imported lazily so a missing `ANTHROPIC_API_KEY` only
 breaks the Claude runtime — the Gemini runtimes still boot.
@@ -16,6 +15,7 @@ breaks the Claude runtime — the Gemini runtimes still boot.
 from __future__ import annotations
 
 import os
+from collections.abc import Iterable
 from typing import Literal
 
 from langgraph.graph.state import CompiledStateGraph
@@ -56,6 +56,8 @@ def build_graph(
     *,
     tools: list,
     system_prompt: str,
+    canvas_middleware: list | None = None,
+    copilotkit_expose_state: bool | Iterable[str] | None = None,
 ) -> CompiledStateGraph:
     """Compile a graph for the named runtime.
 
@@ -69,6 +71,10 @@ def build_graph(
             declarations).
         system_prompt: Already-composed system prompt (with the integration
             status block from phase 01 baked in).
+        canvas_middleware: Middleware stack inserted between timing and
+            CopilotKit. Defaults to ``LeadStateMiddleware`` for the leads graph.
+        copilotkit_expose_state: When set, forwards named canvas keys into the
+            model system prompt via ``CopilotKitMiddleware`` (off by default).
     """
     if runtime not in _VALID_RUNTIMES:
         print(
@@ -79,9 +85,16 @@ def build_graph(
         runtime = "gemini-flash-deep"
 
     timing = TimingMiddleware()
-    lead_state = LeadStateMiddleware()
-    copilotkit = CopilotKitMiddleware()
-    middleware = [timing, lead_state, copilotkit]
+    canvas_layers = (
+        canvas_middleware
+        if canvas_middleware is not None
+        else [LeadStateMiddleware()]
+    )
+    ck_kw: dict[str, bool | Iterable[str]] = {}
+    if copilotkit_expose_state is not None:
+        ck_kw["expose_state"] = copilotkit_expose_state
+    copilotkit = CopilotKitMiddleware(**ck_kw)
+    middleware = [timing, *canvas_layers, copilotkit]
 
     if runtime == "noop":
         return _build_noop(NOOP_FALLBACK_MESSAGE)
@@ -143,18 +156,28 @@ def _build_noop(message: str) -> CompiledStateGraph:
 
 # --------------------------------------------------------------------- gemini
 
-def _gemini_llm():
-    """Build the configured Gemini Flash-Lite chat model.
+_logged_gemini_model: str | None = None
 
-    Default: `gemini-3.1-flash-lite` — the high-volume workhorse in the
-    Gemini 3 family. Verified against `langchain-google-genai` 2.x;
-    swap the id here if you want `gemini-3-flash` or a future tier.
+
+def _gemini_llm():
+    """Build the configured Gemini chat model.
+
+    Model id defaults to ``gemini-3.1-flash-lite``. Override with ``GEMINI_MODEL``
+    when Google's API returns 503 capacity errors — try another Flash SKU that
+    your AI Studio project exposes (e.g. ``gemini-2.0-flash``, ``gemini-2.5-flash``).
     """
     from langchain_google_genai import ChatGoogleGenerativeAI
 
     api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or "stub"
+    model_id = (
+        os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite") or "gemini-3.1-flash-lite"
+    ).strip()
+    global _logged_gemini_model
+    if _logged_gemini_model != model_id:
+        print(f"[runtime] GEMINI_MODEL={model_id}", flush=True)
+        _logged_gemini_model = model_id
     return ChatGoogleGenerativeAI(
-        model="gemini-3.1-flash-lite",
+        model=model_id,
         temperature=0,
         api_key=api_key,
     )

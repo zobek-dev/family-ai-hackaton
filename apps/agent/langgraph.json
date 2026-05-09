@@ -2,6 +2,9 @@
   "python_version": "3.11",
   "dependencies": ["."],
   "package_manager": "uv",
-  "graphs": { "default": "./main.py:graph" },
+  "graphs": {
+    "default": "./main.py:graph",
+    "idealens": "./main.py:idealens_graph"
+  },
   "env": ".env"
 }

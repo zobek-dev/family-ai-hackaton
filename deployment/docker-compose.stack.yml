@@ -1,0 +1,63 @@
+# App layer (LangGraph agent + CopilotKit BFF) on top of
+# deployment/docker-compose.yml (Postgres + Redis + Intelligence composite).
+#
+# Usage from repo root:
+#   npm run deploy:docker
+# Or:
+#   bash deployment/scripts/deploy-docker-stack.sh
+#
+# Required in .env (repo root): at least GEMINI_API_KEY — see docker-compose-stack.env.example
+
+services:
+  agent:
+    build:
+      context: ../apps/agent
+      dockerfile: Dockerfile
+    ports:
+      - "${LANGGRAPH_PUBLISH_HOST_PORT:-8133}:8123"
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GOOGLE_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-}
+      AGENT_RUNTIME: ${AGENT_RUNTIME:-gemini-flash-deep}
+      IDEALENS_AGENT_RUNTIME: ${IDEALENS_AGENT_RUNTIME:-gemini-flash-react}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      LANGSMITH_API_KEY: ${LANGSMITH_API_KEY:-}
+      NOTION_TOKEN: ${NOTION_TOKEN:-}
+      NOTION_LEADS_DATABASE_ID: ${NOTION_LEADS_DATABASE_ID:-}
+      POSTGRES_HOST: postgres
+      POSTGRES_HOST_PORT: "5432"
+      POSTGRES_USER: intelligence
+      POSTGRES_PASSWORD: intelligence
+      INTELLIGENCE_DATABASE: intelligence_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - intelligence
+
+  bff:
+    build:
+      context: ..
+      dockerfile: deployment/docker/Dockerfile.bff
+    ports:
+      - "${BFF_PUBLISH_HOST_PORT:-4000}:4000"
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "4000"
+      LANGGRAPH_RECURSION_LIMIT: ${LANGGRAPH_RECURSION_LIMIT:-60}
+      LANGGRAPH_DEPLOYMENT_URL: http://agent:8123
+      INTELLIGENCE_API_URL: http://intelligence:4201
+      INTELLIGENCE_GATEWAY_WS_URL: ws://intelligence:4401
+      INTELLIGENCE_API_KEY: ${INTELLIGENCE_API_KEY:-cpk_sPRVSEED_seed0privat0longtoken00}
+      COPILOTKIT_LICENSE_TOKEN: ${COPILOTKIT_LICENSE_TOKEN:-}
+      COPILOTKIT_GENERATE_THREAD_NAMES: ${COPILOTKIT_GENERATE_THREAD_NAMES:-false}
+      ENABLE_MCP_APPS: ${ENABLE_MCP_APPS:-false}
+      MCP_SERVER_URL: ${MCP_SERVER_URL:-http://localhost:3001/mcp}
+    depends_on:
+      intelligence:
+        condition: service_started
+      agent:
+        condition: service_started
+    networks:
+      - intelligence

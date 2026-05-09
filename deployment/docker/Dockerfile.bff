@@ -1,0 +1,22 @@
+# CopilotKit Hono BFF — build from monorepo root:
+#   docker build -f deployment/docker/Dockerfile.bff -t family-ai-bff:latest .
+FROM node:22-alpine AS build
+WORKDIR /repo
+COPY package.json package-lock.json ./
+COPY apps/bff/package.json apps/bff/
+COPY apps/frontend/package.json apps/frontend/
+COPY apps/mcp/package.json apps/mcp/
+RUN npm ci -w bff --ignore-scripts
+COPY apps/bff/tsconfig.json apps/bff/tsconfig.json
+COPY apps/bff/src apps/bff/src
+WORKDIR /repo/apps/bff
+RUN npm run build
+
+FROM node:22-alpine AS runner
+WORKDIR /repo/apps/bff
+ENV NODE_ENV=production
+COPY --from=build /repo/node_modules /repo/node_modules
+COPY --from=build /repo/apps/bff/package.json ./package.json
+COPY --from=build /repo/apps/bff/dist ./dist
+EXPOSE 4000
+CMD ["node", "dist/server.js"]
