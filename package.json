@@ -20,7 +20,7 @@
     "dev:mcp": "npm run dev --workspace mcp",
     "install:agent": "cd apps/agent && uv sync",
     "install:mcp": "npm install --workspace mcp",
-    "postinstall": "npm run install:agent",
+    "postinstall": "node scripts/postinstall.mjs",
     "license": "npx copilotkit license",
     "build": "npm run build --workspace frontend",
     "start": "npm run start --workspace frontend",

@@ -12,7 +12,11 @@ loadEnvConfig(path.resolve(here, "../.."));
 // Must match apps/bff default PORT (4000). Was 4010 by mistake → ECONNREFUSED when proxying.
 const BFF_URL = process.env.BFF_URL ?? "http://localhost:4000";
 
+const repoRoot = path.resolve(here, "../..");
+
 const nextConfig: NextConfig = {
+  // Monorepo: trace files from repo root (important for Vercel / serverless bundles).
+  outputFileTracingRoot: repoRoot,
   // Proxy CopilotKit runtime requests to the Hono BFF (apps/bff). We can't run
   // the runtime in a Next.js API route directly because the runtime's v2 entry
   // pulls in express, which Next can't bundle (dynamic require in view.js).

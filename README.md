@@ -59,6 +59,12 @@ Comandos adicionales del monorepo: `npm run dev:full` (incluye servidor MCP opci
 
 ---
 
+## Frontend en Vercel
+
+El Next de `apps/frontend` se puede hospedar en Vercel; el **BFF** y el **stack agente + Intelligence** tienen que vivir fuera de Vercel (Docker/Railway/…). Configuración en la raíz: [`vercel.json`](vercel.json) (`rootDirectory: apps/frontend`). Despliegue por CLI: **`npx vercel deploy --prod`** desde la raíz del repo. Detalle y variables (`BFF_URL`, etc.) en **[deployment/vercel.md](deployment/vercel.md)**.
+
+---
+
 ## Generative UI (contexto)
 
 Este proyecto encaja el espectro CopilotKit: **componentes controlados** en el workspace IdeaLens (el agente elige tipo + props dentro de un catálogo acotado). El kit de partida también podía combinar A2UI, MCP Apps y canvas de leads; la adaptación actual centra el producto en **IdeaLens**. Más lectura: [Generative UI en CopilotKit](https://docs.copilotkit.ai/generative-ui).
@@ -68,7 +74,7 @@ Este proyecto encaja el espectro CopilotKit: **componentes controlados** en el w
 ## Documentación
 
 - **IdeaLens:** [docs/IDEALENS_MVP_SPEC.md](docs/IDEALENS_MVP_SPEC.md) · [docs/idealens-implementation.md](docs/idealens-implementation.md) · [docs/COMPONENTS.md](docs/COMPONENTS.md) · [docs/FLOW.md](docs/FLOW.md)
-- **Kit / operación:** [dev-docs/setup.md](dev-docs/setup.md) · [dev-docs/architecture.md](dev-docs/architecture.md) · [dev-docs/model-switching.md](dev-docs/model-switching.md) · [dev-docs/troubleshooting.md](dev-docs/troubleshooting.md)
+- **Kit / operación:** [dev-docs/setup.md](dev-docs/setup.md) · [dev-docs/architecture.md](dev-docs/architecture.md) · [dev-docs/model-switching.md](dev-docs/model-switching.md) · [dev-docs/troubleshooting.md](dev-docs/troubleshooting.md) · [deployment/vercel.md](deployment/vercel.md)
 
 ## Skills para agentes de código
 
