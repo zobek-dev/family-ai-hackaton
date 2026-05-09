@@ -1,65 +1,103 @@
 import type { Persona } from "@/lib/idealens/types";
-import { Button } from "@/components/ui/button";
-import { Badge } from "./badge-utils";
+import { ModuleCard } from "./ModuleCard";
+import { IdeaLensIcon } from "./IdeaLensIcon";
+import { traitPillClass } from "./badge-utils";
 
 export function PersonaCards({
   personas,
   selectedPersonaId,
   onSelectICP,
+  selectionDisabled = false,
 }: {
   personas: Persona[];
   selectedPersonaId: string | null;
   onSelectICP: (id: string) => void;
+  selectionDisabled?: boolean;
 }) {
   return (
-    <div className="rounded-xl border bg-white p-5">
-      <h2 className="mb-4 text-base font-semibold text-gray-900">Personas</h2>
-      <div className="grid gap-4 lg:grid-cols-3">
+    <ModuleCard step={2} title="Personas" icon="il-personas">
+      {selectionDisabled ? (
+        <p className="mb-3 text-[12px] font-medium text-[color:var(--il-color-warning)]">
+          Genera primero el workspace con tu idea; después podrás elegir ICP.
+        </p>
+      ) : null}
+      <div className="il-personas">
         {personas.map((p) => {
           const selected = selectedPersonaId === p.id;
           return (
-            <div
+            <article
               key={p.id}
-              className={`rounded-lg border p-4 transition-colors ${
-                selected ? "border-blue-500 ring-2 ring-blue-200" : "border-gray-200"
-              }`}
+              className={`il-persona-grid-card ${selected ? "is-active" : ""}`}
             >
-              <div className="mb-2 flex flex-wrap gap-2">
-                <Badge value={p.painIntensity}>{p.painIntensity} pain</Badge>
-                <Badge value={p.budgetLevel}>{p.budgetLevel} budget</Badge>
-                <Badge value={p.urgency}>{p.urgency} urgency</Badge>
+              {selected ? (
+                <span className="il-check-dot" aria-label="Selected as ICP">
+                  <IdeaLensIcon name="il-check" size={11} />
+                </span>
+              ) : null}
+              <div className="il-avatar-circle" aria-hidden>
+                <IdeaLensIcon name="il-personas" size={26} />
               </div>
-              <h3 className="text-sm font-semibold text-gray-900">{p.name}</h3>
-              <p className="mt-1 text-sm text-gray-600">{p.description}</p>
-              <p className="mt-2 text-xs font-medium uppercase text-gray-400">
-                Acquisition
-              </p>
-              <p className="text-sm text-gray-600">{p.acquisitionChannel}</p>
-              <p className="mt-2 text-xs font-medium uppercase text-gray-400">
-                Objections
-              </p>
-              <ul className="list-inside list-disc text-sm text-gray-600">
-                {p.objections.map((o) => (
-                  <li key={o}>{o}</li>
-                ))}
-              </ul>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <Button
+              <h3 className="il-persona-name">{p.name}</h3>
+              <p className="il-persona-desc">{p.description}</p>
+              <div className="il-traits">
+                <div className="il-trait">
+                  <span>Pain</span>
+                  <span className={`il-pill ${traitPillClass(p.painIntensity)}`}>
+                    {p.painIntensity}
+                  </span>
+                </div>
+                <div className="il-trait">
+                  <span>Budget</span>
+                  <span className={`il-pill ${traitPillClass(p.budgetLevel)}`}>
+                    {p.budgetLevel}
+                  </span>
+                </div>
+                <div className="il-trait">
+                  <span>Urgency</span>
+                  <span className={`il-pill ${traitPillClass(p.urgency)}`}>
+                    {p.urgency}
+                  </span>
+                </div>
+              </div>
+              {(p.acquisitionChannel || p.objections.length > 0) && (
+                <div className="grid gap-1 text-[11px] leading-snug text-[color:var(--il-color-text)]">
+                  {p.acquisitionChannel ? (
+                    <p>
+                      <span className="font-bold uppercase tracking-wide text-[color:var(--il-color-muted)]">
+                        Channel:&nbsp;
+                      </span>
+                      {p.acquisitionChannel}
+                    </p>
+                  ) : null}
+                  {p.objections.length > 0 ? (
+                    <p>
+                      <span className="font-bold uppercase tracking-wide text-[color:var(--il-color-muted)]">
+                        Top objection:&nbsp;
+                      </span>
+                      {p.objections[0]}
+                    </p>
+                  ) : null}
+                </div>
+              )}
+              <div className="il-persona-actions">
+                <button
                   type="button"
-                  size="sm"
-                  variant={selected ? "default" : "secondary"}
+                  className={`il-button ${selected ? "il-button-primary" : ""}`}
+                  disabled={selectionDisabled}
                   onClick={() => onSelectICP(p.id)}
                 >
-                  Select as ICP
-                </Button>
-                <Button type="button" size="sm" variant="outline" disabled>
+                  <IdeaLensIcon name={selected ? "il-check" : "il-spark"} size={14} />
+                  {selected ? "ICP selected" : "Select ICP"}
+                </button>
+                <button type="button" className="il-button" disabled>
+                  <IdeaLensIcon name="il-close" size={14} />
                   Reject
-                </Button>
+                </button>
               </div>
-            </div>
+            </article>
           );
         })}
       </div>
-    </div>
+    </ModuleCard>
   );
 }

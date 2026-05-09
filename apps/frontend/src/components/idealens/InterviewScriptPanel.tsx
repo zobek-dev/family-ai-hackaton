@@ -1,6 +1,6 @@
 import type { InterviewScript } from "@/lib/idealens/types";
-import { Button } from "@/components/ui/button";
-import { Badge } from "./badge-utils";
+import { ModuleCard } from "./ModuleCard";
+import { IdeaLensIcon } from "./IdeaLensIcon";
 
 export function InterviewScriptPanel({ script }: { script: InterviewScript }) {
   const copyAll = () => {
@@ -9,46 +9,73 @@ export function InterviewScriptPanel({ script }: { script: InterviewScript }) {
   };
 
   return (
-    <div className="rounded-xl border bg-white p-5">
-      <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
-        <div>
-          <h2 className="text-base font-semibold text-gray-900">{script.title}</h2>
-          <div className="mt-2 flex flex-wrap gap-2">
-            <Badge>{script.targetPersona}</Badge>
-          </div>
-          <p className="mt-2 text-sm text-gray-600">{script.goal}</p>
-        </div>
-        <Button type="button" size="sm" variant="outline" onClick={copyAll}>
+    <ModuleCard
+      step={6}
+      title="Interview Script"
+      icon="il-tool"
+      actions={
+        <button type="button" className="il-button" onClick={copyAll}>
+          <IdeaLensIcon name="il-tool" size={14} />
           Copy all questions
-        </Button>
+        </button>
+      }
+    >
+      <div
+        className="il-objective"
+        style={{ marginBottom: 14, background: "var(--il-color-brand-soft)", borderColor: "var(--il-color-brand)" }}
+      >
+        <strong style={{ color: "var(--il-color-brand-strong)" }}>{script.title}</strong>
+        <p style={{ marginTop: 6 }}>
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 850,
+              textTransform: "uppercase",
+              color: "var(--il-color-muted)",
+            }}
+          >
+            Target persona:&nbsp;
+          </span>
+          {script.targetPersona}
+        </p>
+        <p>{script.goal}</p>
       </div>
-      <div className="space-y-4">
-        {script.questions.map((q) => (
-          <div key={q.id} className="rounded-lg border border-gray-100 p-4">
-            <p className="text-sm font-semibold text-gray-900">{q.question}</p>
-            <div className="mt-2 grid gap-2 sm:grid-cols-1">
-              <div>
-                <p className="text-xs font-medium uppercase text-gray-400">
-                  Purpose
-                </p>
-                <p className="text-sm text-gray-600">{q.purpose}</p>
-              </div>
-              <div>
-                <p className="text-xs font-medium uppercase text-gray-400">
-                  Good signal
-                </p>
-                <p className="text-sm text-green-700">{q.goodSignal}</p>
-              </div>
-              <div>
-                <p className="text-xs font-medium uppercase text-gray-400">
-                  Red flag
-                </p>
-                <p className="text-sm text-red-700">{q.redFlag}</p>
-              </div>
+
+      <div className="grid gap-3">
+        {script.questions.map((q, idx) => (
+          <article
+            key={q.id}
+            className="rounded-md border border-[color:var(--il-color-line)] bg-[color:var(--il-color-surface)] p-3 shadow-[var(--il-shadow-card)]"
+          >
+            <p className="text-[13px] font-bold text-[color:var(--il-color-ink)]">
+              <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-[color:var(--il-color-brand-soft)] text-[10px] font-bold text-[color:var(--il-color-brand-strong)]">
+                {idx + 1}
+              </span>
+              {q.question}
+            </p>
+            <div className="mt-2 grid gap-1 text-[12px]">
+              <p>
+                <span className="text-[10px] font-bold uppercase tracking-wide text-[color:var(--il-color-muted)]">
+                  Purpose:&nbsp;
+                </span>
+                <span className="text-[color:var(--il-color-text)]">{q.purpose}</span>
+              </p>
+              <p>
+                <span className="text-[10px] font-bold uppercase tracking-wide text-[color:var(--il-color-muted)]">
+                  Good signal:&nbsp;
+                </span>
+                <span className="text-[color:var(--il-color-success-strong)]">{q.goodSignal}</span>
+              </p>
+              <p>
+                <span className="text-[10px] font-bold uppercase tracking-wide text-[color:var(--il-color-muted)]">
+                  Red flag:&nbsp;
+                </span>
+                <span className="text-[color:var(--il-color-danger)]">{q.redFlag}</span>
+              </p>
             </div>
-          </div>
+          </article>
         ))}
       </div>
-    </div>
+    </ModuleCard>
   );
 }

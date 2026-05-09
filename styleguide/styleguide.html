@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IdeaLens Visual Styleguide</title>
+    <link rel="stylesheet" href="assets/idealens-tokens.css" />
+    <style>
+      body {
+        margin: 0;
+      }
+
+      .guide-shell {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 32px 20px 56px;
+      }
+
+      .guide-header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 24px;
+        align-items: start;
+        margin-bottom: 28px;
+      }
+
+      .guide-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .guide-mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        background: conic-gradient(from 30deg, #8a68ff, #3f8cff, #14a983, #8a68ff);
+        box-shadow: 0 10px 24px rgba(102, 80, 233, 0.24);
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 8px;
+        font-size: clamp(30px, 5vw, 54px);
+        line-height: 1;
+        font-weight: 900;
+      }
+
+      h1 span {
+        color: var(--il-color-brand);
+      }
+
+      .lead {
+        max-width: 690px;
+        color: var(--il-color-muted);
+        font-size: var(--il-font-size-16);
+        line-height: 1.55;
+      }
+
+      .guide-section {
+        margin-top: 18px;
+        padding: 20px;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .section-head p {
+        margin: 0;
+        color: var(--il-color-muted);
+        font-size: var(--il-font-size-13);
+      }
+
+      .grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .swatch {
+        border: 1px solid var(--il-color-line);
+        border-radius: var(--il-radius-md);
+        background: #fff;
+        overflow: hidden;
+      }
+
+      .swatch-color {
+        height: 74px;
+      }
+
+      .swatch-body {
+        padding: 12px;
+        font-size: var(--il-font-size-12);
+      }
+
+      .swatch-body strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .muted {
+        color: var(--il-color-muted);
+      }
+
+      .type-row {
+        border-bottom: 1px solid var(--il-color-line);
+        padding: 14px 0;
+        display: grid;
+        grid-template-columns: 170px 1fr;
+        gap: 20px;
+        align-items: baseline;
+      }
+
+      .type-row:last-child {
+        border-bottom: 0;
+      }
+
+      .sample-h1 {
+        font-size: var(--il-font-size-30);
+        font-weight: 900;
+      }
+
+      .sample-title {
+        font-size: var(--il-font-size-12);
+        font-weight: 850;
+        text-transform: uppercase;
+        color: var(--il-color-success-strong);
+      }
+
+      .sample-body {
+        font-size: var(--il-font-size-13);
+        color: var(--il-color-text);
+      }
+
+      .icon-grid {
+        grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+      }
+
+      .icon-cell {
+        min-height: 98px;
+        border: 1px solid var(--il-color-line);
+        border-radius: var(--il-radius-md);
+        background: #fff;
+        display: grid;
+        place-items: center;
+        gap: 8px;
+        padding: 12px;
+        color: var(--il-color-brand);
+      }
+
+      .icon-cell span {
+        color: var(--il-color-text);
+        font-size: var(--il-font-size-11);
+        font-weight: 760;
+      }
+
+      .component-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .code {
+        margin: 14px 0 0;
+        padding: 14px;
+        border-radius: var(--il-radius-md);
+        background: #171827;
+        color: #f8faff;
+        overflow: auto;
+        font-size: 12px;
+        line-height: 1.55;
+      }
+
+      .persona-preview {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 14px;
+        align-items: center;
+      }
+
+      .mini-board {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+
+      .lane {
+        min-height: 142px;
+        border: 1px solid var(--il-color-line);
+        border-radius: var(--il-radius-md);
+        padding: 10px;
+        background: var(--il-color-surface-soft);
+      }
+
+      .lane strong {
+        display: block;
+        font-size: var(--il-font-size-11);
+        margin-bottom: 10px;
+      }
+
+      .task {
+        background: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.07);
+        border-radius: var(--il-radius-md);
+        padding: 9px;
+        font-size: var(--il-font-size-12);
+        line-height: 1.35;
+        margin-bottom: 8px;
+      }
+
+      @media (max-width: 760px) {
+        .guide-header,
+        .grid-2,
+        .grid-3,
+        .grid-4,
+        .mini-board,
+        .type-row {
+          grid-template-columns: 1fr;
+        }
+
+        .section-head {
+          display: grid;
+        }
+      }
+    </style>
+  </head>
+  <body class="il-theme">
+    <svg width="0" height="0" aria-hidden="true">
+      <defs>
+        <g id="inline-sprite"></g>
+      </defs>
+    </svg>
+    <div class="guide-shell">
+      <header class="guide-header">
+        <div>
+          <div class="guide-brand">
+            <div class="guide-mark">
+              <svg class="il-icon" aria-hidden="true"><use href="assets/idealens-icons.svg#il-lens"></use></svg>
+            </div>
+            <div>
+              <h1><span>IdeaLens</span> Styleguide</h1>
+              <p class="lead">Sistema visual para integrar el agente de validacion de startups en un producto real: tokens, componentes, estados e iconografia SVG reutilizable.</p>
+            </div>
+          </div>
+        </div>
+        <button class="il-button il-button-primary">
+          <svg class="il-icon" aria-hidden="true"><use href="assets/idealens-icons.svg#il-rocket"></use></svg>
+          Usar en proyecto
+        </button>
+      </header>
+
+      <section class="guide-section il-card">
+        <div class="section-head">
+          <h2 class="il-section-title"><span class="il-step">1</span> Color Tokens</h2>
+          <p>Usa la marca como accion principal, verde para evidencia positiva y amarillo/rojo para riesgo.</p>
+        </div>
+        <div class="grid grid-4">
+          <div class="swatch"><div class="swatch-color" style="background:#6650e9"></div><div class="swatch-body"><strong>Brand</strong><span class="muted">--il-color-brand</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:#14a983"></div><div class="swatch-body"><strong>Success</strong><span class="muted">--il-color-success</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:#e7b837"></div><div class="swatch-body"><strong>Warning</strong><span class="muted">--il-color-warning</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:#df5570"></div><div class="swatch-body"><strong>Danger</strong><span class="muted">--il-color-danger</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:#171827"></div><div class="swatch-body"><strong>Ink</strong><span class="muted">--il-color-ink</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:#6b7280"></div><div class="swatch-body"><strong>Muted</strong><span class="muted">--il-color-muted</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:#dde2ee"></div><div class="swatch-body"><strong>Line</strong><span class="muted">--il-color-line</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:#f6f7fb"></div><div class="swatch-body"><strong>Background</strong><span class="muted">--il-color-bg</span></div></div>
+        </div>
+      </section>
+
+      <section class="guide-section il-card">
+        <div class="section-head">
+          <h2 class="il-section-title"><span class="il-step">2</span> Typography</h2>
+          <p>Tipografia densa y operativa para dashboards, con titulos compactos.</p>
+        </div>
+        <div class="type-row"><span class="muted">Workspace title</span><div class="sample-h1">IdeaLens MVP - Main Workspace</div></div>
+        <div class="type-row"><span class="muted">Section label</span><div class="sample-title">Validation Experiment Board</div></div>
+        <div class="type-row"><span class="muted">Body copy</span><div class="sample-body">Run pricing interviews before building the full product.</div></div>
+      </section>
+
+      <section class="guide-section il-card">
+        <div class="section-head">
+          <h2 class="il-section-title"><span class="il-step">3</span> Icons</h2>
+          <p>Sprite SVG: importa una vez y referencia con <code>&lt;use href="assets/idealens-icons.svg#il-lens"&gt;</code>.</p>
+        </div>
+        <div class="grid icon-grid">
+          <div class="icon-cell"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-lens"></use></svg><span>il-lens</span></div>
+          <div class="icon-cell"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-spark"></use></svg><span>il-spark</span></div>
+          <div class="icon-cell"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-target"></use></svg><span>il-target</span></div>
+          <div class="icon-cell"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-personas"></use></svg><span>il-personas</span></div>
+          <div class="icon-cell"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-map"></use></svg><span>il-map</span></div>
+          <div class="icon-cell"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-experiment"></use></svg><span>il-experiment</span></div>
+          <div class="icon-cell"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-score"></use></svg><span>il-score</span></div>
+          <div class="icon-cell"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-tool"></use></svg><span>il-tool</span></div>
+          <div class="icon-cell"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-activity"></use></svg><span>il-activity</span></div>
+          <div class="icon-cell"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-warning"></use></svg><span>il-warning</span></div>
+          <div class="icon-cell"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-check"></use></svg><span>il-check</span></div>
+          <div class="icon-cell"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-rocket"></use></svg><span>il-rocket</span></div>
+        </div>
+        <pre class="code"><code>&lt;svg class="il-icon" aria-hidden="true"&gt;
+  &lt;use href="assets/idealens-icons.svg#il-experiment"&gt;&lt;/use&gt;
+&lt;/svg&gt;</code></pre>
+      </section>
+
+      <section class="guide-section il-card">
+        <div class="section-head">
+          <h2 class="il-section-title"><span class="il-step">4</span> Core Components</h2>
+          <p>Elementos base para formularios, acciones, estado y progreso del agente.</p>
+        </div>
+        <div class="grid grid-2">
+          <div>
+            <label class="il-label" for="idea">Startup Idea</label>
+            <textarea class="il-textarea" id="idea">AI copilot for small e-commerce stores in LatAm.</textarea>
+          </div>
+          <div class="grid">
+            <div class="component-row">
+              <button class="il-button il-button-primary"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-spark"></use></svg>Generate Workspace</button>
+              <button class="il-button"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-edit"></use></svg>Edit</button>
+              <button class="il-button"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-refresh"></use></svg>Regenerate</button>
+            </div>
+            <div class="component-row">
+              <span class="il-pill il-pill-high">High</span>
+              <span class="il-pill il-pill-medium">Medium</span>
+              <span class="il-pill il-pill-low">Low</span>
+              <span class="il-status il-status-warning">Unknown</span>
+              <span class="il-status il-status-success">Validated</span>
+            </div>
+            <div>
+              <label class="il-label">Agent Confidence</label>
+              <div class="il-progress"><span style="--value:72%"></span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="guide-section il-card">
+        <div class="section-head">
+          <h2 class="il-section-title"><span class="il-step">5</span> Product Patterns</h2>
+          <p>Patrones de UI que vienen del workspace inicial y ya estan listos para componentizar.</p>
+        </div>
+        <div class="grid grid-2">
+          <article class="il-persona-card is-active">
+            <div class="persona-preview">
+              <div class="il-avatar"><svg class="il-icon"><use href="assets/idealens-icons.svg#il-personas"></use></svg></div>
+              <div>
+                <h3>Solo Shopify Seller</h3>
+                <p class="muted">Runs a small online store and handles marketing alone.</p>
+              </div>
+            </div>
+            <div class="component-row">
+              <span class="il-pill il-pill-high">Pain High</span>
+              <span class="il-pill il-pill-medium">Budget Medium</span>
+              <span class="il-pill il-pill-high">Urgency High</span>
+            </div>
+          </article>
+          <div class="mini-board">
+            <div class="lane"><strong>Backlog</strong><div class="task">Fake-door pricing test</div><div class="task">Concierge MVP</div></div>
+            <div class="lane"><strong>Running</strong><div class="task">Interview 10 sellers</div></div>
+            <div class="lane"><strong>Validated</strong><div class="task">Problem pain confirmed</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="guide-section il-card">
+        <div class="section-head">
+          <h2 class="il-section-title"><span class="il-step">6</span> Integration</h2>
+          <p>Incluye el CSS y el sprite SVG en tu app. En React/Vue puedes mapear los mismos nombres a componentes.</p>
+        </div>
+        <pre class="code"><code>&lt;link rel="stylesheet" href="/assets/idealens-tokens.css" /&gt;
+
+&lt;button class="il-button il-button-primary"&gt;
+  &lt;svg class="il-icon" aria-hidden="true"&gt;
+    &lt;use href="/assets/idealens-icons.svg#il-spark"&gt;&lt;/use&gt;
+  &lt;/svg&gt;
+  Generate Workspace
+&lt;/button&gt;</code></pre>
+      </section>
+    </div>
+  </body>
+</html>

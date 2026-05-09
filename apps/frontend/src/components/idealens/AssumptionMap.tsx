@@ -1,76 +1,81 @@
 import type { Assumption } from "@/lib/idealens/types";
-import { Button } from "@/components/ui/button";
-import { Badge } from "./badge-utils";
+import { ModuleCard } from "./ModuleCard";
+import { IdeaLensIcon } from "./IdeaLensIcon";
+import { Badge, statusToneClass } from "./badge-utils";
 
 export function AssumptionMap({
   assumptions,
   onMarkRisky,
   onMarkValidated,
   onMarkInvalidated,
+  riskyDisabled = false,
 }: {
   assumptions: Assumption[];
   onMarkRisky: (id: string) => void;
   onMarkValidated: (id: string) => void;
   onMarkInvalidated: (id: string) => void;
+  riskyDisabled?: boolean;
 }) {
   return (
-    <div className="rounded-xl border bg-white p-5">
-      <h2 className="mb-4 text-base font-semibold text-gray-900">Assumptions</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[720px] border-collapse text-sm">
+    <ModuleCard step={4} title="Assumption Map" icon="il-map">
+      <div className="il-table-wrap">
+        <table className="il-assumptions-table">
           <thead>
-            <tr className="border-b text-left text-xs font-medium uppercase text-gray-400">
-              <th className="pb-2 pr-4">Assumption</th>
-              <th className="pb-2 pr-4">Category</th>
-              <th className="pb-2 pr-4">Importance</th>
-              <th className="pb-2 pr-4">Status</th>
-              <th className="pb-2 pr-4">Test method</th>
-              <th className="pb-2">Actions</th>
+            <tr>
+              <th>Assumption</th>
+              <th>Category</th>
+              <th>Importance</th>
+              <th>Status</th>
+              <th>Test method</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {assumptions.map((a) => (
-              <tr key={a.id} className="border-b border-gray-100">
-                <td className="py-3 pr-4 align-top text-gray-700">{a.text}</td>
-                <td className="py-3 pr-4 align-top">
+              <tr key={a.id}>
+                <td style={{ color: "var(--il-color-text)", maxWidth: 260 }}>
+                  {a.text}
+                </td>
+                <td>
                   <Badge value={a.category}>{a.category}</Badge>
                 </td>
-                <td className="py-3 pr-4 align-top">
+                <td>
                   <Badge value={a.importance}>{a.importance}</Badge>
                 </td>
-                <td className="py-3 pr-4 align-top">
-                  <Badge value={a.status}>{a.status}</Badge>
+                <td>
+                  <span className={statusToneClass(a.status)}>{a.status}</span>
                 </td>
-                <td className="py-3 pr-4 align-top text-gray-600">{a.testMethod}</td>
-                <td className="py-3 align-top">
-                  <div className="flex flex-col gap-1 sm:flex-row sm:flex-wrap">
-                    <Button
+                <td style={{ color: "var(--il-color-muted)" }}>{a.testMethod}</td>
+                <td>
+                  <div className="flex flex-wrap gap-1">
+                    <button
                       type="button"
-                      size="sm"
-                      variant="outline"
-                      className="text-xs"
+                      className="il-button"
+                      style={{ minHeight: 28, padding: "0 8px", fontSize: 11 }}
+                      disabled={riskyDisabled}
                       onClick={() => onMarkRisky(a.id)}
                     >
-                      Mark risky
-                    </Button>
-                    <Button
+                      <IdeaLensIcon name="il-warning" size={12} />
+                      Risky
+                    </button>
+                    <button
                       type="button"
-                      size="sm"
-                      variant="outline"
-                      className="text-xs"
+                      className="il-button"
+                      style={{ minHeight: 28, padding: "0 8px", fontSize: 11 }}
                       onClick={() => onMarkValidated(a.id)}
                     >
-                      Mark validated
-                    </Button>
-                    <Button
+                      <IdeaLensIcon name="il-check" size={12} />
+                      Validated
+                    </button>
+                    <button
                       type="button"
-                      size="sm"
-                      variant="outline"
-                      className="text-xs"
+                      className="il-button"
+                      style={{ minHeight: 28, padding: "0 8px", fontSize: 11 }}
                       onClick={() => onMarkInvalidated(a.id)}
                     >
-                      Mark invalidated
-                    </Button>
+                      <IdeaLensIcon name="il-close" size={12} />
+                      Invalidated
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -78,6 +83,6 @@ export function AssumptionMap({
           </tbody>
         </table>
       </div>
-    </div>
+    </ModuleCard>
   );
 }

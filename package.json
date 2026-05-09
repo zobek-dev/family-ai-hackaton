@@ -21,10 +21,13 @@
     "install:agent": "cd apps/agent && uv sync",
     "install:mcp": "npm install --workspace mcp",
     "postinstall": "npm run install:agent",
-    "license": "npx copilotkit license -n hackathon-kit",
+    "license": "npx copilotkit license",
     "build": "npm run build --workspace frontend",
     "start": "npm run start --workspace frontend",
-    "lint": "npm run lint --workspace frontend"
+    "lint": "npm run lint --workspace frontend",
+    "deploy:docker": "bash deployment/scripts/deploy-docker-stack.sh",
+    "deploy:docker:down": "bash deployment/scripts/deploy-docker-stack.sh down",
+    "deploy:docker:regen-agent-dockerfile": "bash deployment/scripts/agent-dockerfile-regen.sh"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"

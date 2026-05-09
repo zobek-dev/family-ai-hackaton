@@ -26,7 +26,9 @@ Build:
 - scorecard: { decision, biggestRisk, recommendedNextStep, dimensions: { problemClarity, customerSpecificity, urgency, differentiation, monetizationClarity, mvpFeasibility, distributionFeasibility, evidenceStrength } } — all dimensions are numbers 0-10, do NOT include overallScore
 - agentState: { status:"WaitingForUser", currentObjective, confidence:50, suggestions:[], activityLog:[] }
 
-When ready, call updateWorkspace. Pass either { workspace: <full workspace object> } OR put the workspace fields at the top level of the tool arguments object.`;
+When ready, call updateWorkspace. Pass either { workspace: <full workspace object> } OR put the workspace fields at the top level of the tool arguments object.
+
+CRITICAL: You must call updateWorkspace in this turn — no assistant-only reply. The workspace must match the founder's idea above.`;
 }
 
 export function buildPersonaUpdateUserMessage(

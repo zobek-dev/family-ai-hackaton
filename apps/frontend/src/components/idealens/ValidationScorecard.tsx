@@ -1,11 +1,9 @@
+import type { CSSProperties } from "react";
 import type { ValidationScorecard as ScorecardType } from "@/lib/idealens/types";
-import { Progress } from "@/components/ui/progress";
+import { ModuleCard } from "./ModuleCard";
 import { Badge } from "./badge-utils";
 
-const DIMENSION_LABELS: Record<
-  keyof ScorecardType["dimensions"],
-  string
-> = {
+const DIMENSION_LABELS: Record<keyof ScorecardType["dimensions"], string> = {
   problemClarity: "Problem clarity",
   customerSpecificity: "Customer specificity",
   urgency: "Urgency",
@@ -16,56 +14,58 @@ const DIMENSION_LABELS: Record<
   evidenceStrength: "Evidence strength",
 };
 
+function barClass(score10: number): string {
+  if (score10 >= 7) return "il-bar";
+  if (score10 >= 4) return "il-bar is-warning";
+  return "il-bar is-danger";
+}
+
 export function ValidationScorecard({
   scorecard,
 }: {
   scorecard: ScorecardType;
 }) {
+  const ringStyle = {
+    "--score": `${Math.max(0, Math.min(100, scorecard.overallScore))}%`,
+  } as CSSProperties;
+
   return (
-    <div className="rounded-xl border bg-white p-5">
-      <h2 className="mb-4 text-base font-semibold text-gray-900">
-        Validation scorecard
-      </h2>
-      <div className="flex flex-wrap items-end gap-4">
-        <div>
-          <div className="text-5xl font-bold tabular-nums text-gray-900">
+    <ModuleCard step={5} title="Validation Scorecard" icon="il-score">
+      <div className="il-score-grid">
+        <div className="il-score-ring" style={ringStyle}>
+          <div className="il-score-value">
             {scorecard.overallScore}
+            <span>/100</span>
           </div>
-          <p className="text-xs text-gray-500">Provisional overall score</p>
         </div>
-        <Badge value={scorecard.decision}>{scorecard.decision}</Badge>
-      </div>
-      <div className="mt-4 space-y-2">
-        <div>
-          <p className="text-xs font-medium uppercase text-gray-400">
-            Biggest risk
-          </p>
-          <p className="text-sm text-gray-700">{scorecard.biggestRisk}</p>
+        <div className="il-signal">
+          <strong>Decision:</strong>{" "}
+          <Badge value={scorecard.decision}>{scorecard.decision}</Badge>
+          <p className="il-signal-label">Biggest risk</p>
+          <p>{scorecard.biggestRisk}</p>
+          <p className="il-signal-label">Recommended next step</p>
+          <p>{scorecard.recommendedNextStep}</p>
         </div>
-        <div>
-          <p className="text-xs font-medium uppercase text-gray-400">
-            Recommended next step
-          </p>
-          <p className="text-sm text-gray-700">{scorecard.recommendedNextStep}</p>
+        <div className="il-metric-list">
+          {(Object.keys(DIMENSION_LABELS) as (keyof ScorecardType["dimensions"])[]).map(
+            (key) => {
+              const score10 = scorecard.dimensions[key];
+              const pct = Math.max(0, Math.min(100, score10 * 10));
+              return (
+                <div key={key} className="il-metric">
+                  <span>{DIMENSION_LABELS[key]}</span>
+                  <div className={barClass(score10)}>
+                    <span style={{ width: `${pct}%` }} />
+                  </div>
+                  <span style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
+                    {score10}
+                  </span>
+                </div>
+              );
+            },
+          )}
         </div>
       </div>
-      <div className="mt-6 space-y-4">
-        {(Object.keys(DIMENSION_LABELS) as (keyof ScorecardType["dimensions"])[]).map(
-          (key) => (
-            <div key={key}>
-              <div className="mb-1 flex justify-between text-xs">
-                <span className="font-medium text-gray-600">
-                  {DIMENSION_LABELS[key]}
-                </span>
-                <span className="tabular-nums text-gray-500">
-                  {scorecard.dimensions[key]}/10
-                </span>
-              </div>
-              <Progress value={scorecard.dimensions[key] * 10} className="h-2" />
-            </div>
-          ),
-        )}
-      </div>
-    </div>
+    </ModuleCard>
   );
 }

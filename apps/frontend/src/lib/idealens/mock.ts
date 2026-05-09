@@ -165,7 +165,7 @@ export const mockWorkspace: IdeaLensWorkspace = {
       "Mark your riskiest assumption to generate a targeted experiment.",
       "Generate an interview script to start talking to customers this week.",
     ],
-    activityLog: ["Workspace generated for: AI copilot for LatAm e-commerce stores."],
+    activityLog: [] as string[],
     isMockActive: false,
   },
 };
