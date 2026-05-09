@@ -13,6 +13,10 @@ const intelligence = new CopilotKitIntelligence({
   wsUrl: process.env.INTELLIGENCE_GATEWAY_WS_URL ?? "ws://localhost:4403",
 });
 
+const defaultLangGraphAssistantConfig = {
+  recursion_limit: Number(process.env.LANGGRAPH_RECURSION_LIMIT ?? 60),
+};
+
 const agent = new LangGraphAgent({
   deploymentUrl:
     process.env.LANGGRAPH_DEPLOYMENT_URL ?? "http://localhost:8123",
@@ -20,9 +24,15 @@ const agent = new LangGraphAgent({
   langsmithApiKey: process.env.LANGSMITH_API_KEY ?? "",
   // 60 (vs LangGraph default 25) leaves headroom for the deepagents planner
   // loop on multi-step turns like "draft email + queue".
-  assistantConfig: {
-    recursion_limit: Number(process.env.LANGGRAPH_RECURSION_LIMIT ?? 60),
-  },
+  assistantConfig: defaultLangGraphAssistantConfig,
+});
+
+const idealensAgent = new LangGraphAgent({
+  deploymentUrl:
+    process.env.LANGGRAPH_DEPLOYMENT_URL ?? "http://localhost:8123",
+  graphId: "idealens",
+  langsmithApiKey: process.env.LANGSMITH_API_KEY ?? "",
+  assistantConfig: defaultLangGraphAssistantConfig,
 });
 
 const app = createCopilotEndpoint({
@@ -31,7 +41,7 @@ const app = createCopilotEndpoint({
     intelligence,
     identifyUser: () => ({ id: "default", name: "Hackathon User" }),
     licenseToken: process.env.COPILOTKIT_LICENSE_TOKEN,
-    agents: { default: agent },
+    agents: { default: agent, idealens: idealensAgent },
     openGenerativeUI: true,
     a2ui: { injectA2UITool: false },
     mcpApps: {

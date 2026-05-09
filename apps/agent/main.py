@@ -29,6 +29,8 @@ from src.intelligence_cleanup import wipe_orphan_threads
 from src.lead_store import boot_status as _lead_store_boot_status
 from src.notion_tools import load_notion_tools
 from src.prompts import build_system_prompt
+from src.idealens.middleware import IdeaLensStateMiddleware
+from src.idealens.prompts import IDEA_LENS_SYSTEM_PROMPT
 from src.runtime import build_graph
 
 
@@ -106,6 +108,14 @@ graph = build_graph(
     "noop" if _use_noop else _AGENT_RUNTIME,
     tools=backend_tools,
     system_prompt=SYSTEM_PROMPT,
+)
+
+
+idealens_graph = build_graph(
+    "noop" if _use_noop else _AGENT_RUNTIME,
+    tools=[],
+    system_prompt=IDEA_LENS_SYSTEM_PROMPT,
+    canvas_middleware=[IdeaLensStateMiddleware()],
 )
 
 

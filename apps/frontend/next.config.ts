@@ -9,7 +9,8 @@ import type { NextConfig } from "next";
 const here = path.dirname(fileURLToPath(import.meta.url));
 loadEnvConfig(path.resolve(here, "../.."));
 
-const BFF_URL = process.env.BFF_URL ?? "http://localhost:4010";
+// Must match apps/bff default PORT (4000). Was 4010 by mistake → ECONNREFUSED when proxying.
+const BFF_URL = process.env.BFF_URL ?? "http://localhost:4000";
 
 const nextConfig: NextConfig = {
   // Proxy CopilotKit runtime requests to the Hono BFF (apps/bff). We can't run

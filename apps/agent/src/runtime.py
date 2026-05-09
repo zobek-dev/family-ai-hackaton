@@ -5,9 +5,8 @@ side-by-side benchmark Gemini-Flash-Lite-deepagents vs. Gemini-Flash-Lite-react
 vs. Claude-Sonnet-4.6-react without a code edit.
 
 Every runtime keeps the same middleware chain — `TimingMiddleware` first
-(outermost) so it sees every inner model/tool call, then `LeadStateMiddleware`
-to contribute the canvas-state TypedDict, and `CopilotKitMiddleware` for
-AG-UI / CopilotKit interop.
+(outermost), canvas middleware (`LeadStateMiddleware` by default, or IdeaLens),
+then `CopilotKitMiddleware` for AG-UI / CopilotKit interop.
 
 Anthropic deps are imported lazily so a missing `ANTHROPIC_API_KEY` only
 breaks the Claude runtime — the Gemini runtimes still boot.
@@ -56,6 +55,7 @@ def build_graph(
     *,
     tools: list,
     system_prompt: str,
+    canvas_middleware: list | None = None,
 ) -> CompiledStateGraph:
     """Compile a graph for the named runtime.
 
@@ -69,6 +69,8 @@ def build_graph(
             declarations).
         system_prompt: Already-composed system prompt (with the integration
             status block from phase 01 baked in).
+        canvas_middleware: Middleware stack inserted between timing and
+            CopilotKit. Defaults to ``LeadStateMiddleware`` for the leads graph.
     """
     if runtime not in _VALID_RUNTIMES:
         print(
@@ -79,9 +81,13 @@ def build_graph(
         runtime = "gemini-flash-deep"
 
     timing = TimingMiddleware()
-    lead_state = LeadStateMiddleware()
+    canvas_layers = (
+        canvas_middleware
+        if canvas_middleware is not None
+        else [LeadStateMiddleware()]
+    )
     copilotkit = CopilotKitMiddleware()
-    middleware = [timing, lead_state, copilotkit]
+    middleware = [timing, *canvas_layers, copilotkit]
 
     if runtime == "noop":
         return _build_noop(NOOP_FALLBACK_MESSAGE)

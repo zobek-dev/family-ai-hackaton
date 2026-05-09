@@ -56,6 +56,12 @@ const DOC_LINKS: Array<{
     external: false,
   },
   {
+    label: "IdeaLens",
+    href: "/idealens",
+    icon: Sparkles,
+    external: false,
+  },
+  {
     label: "Tool surface",
     href: "/showcase",
     icon: Sparkles,
